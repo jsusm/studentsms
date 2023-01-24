@@ -1,3 +1,3 @@
 #Studentsms
 
-This is a project that create for my parents.
+This is a project that i've created for my parents.
