@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Klass {
+  id       Int       @id @default(autoincrement())
+  title    String    @unique
+  name     String
+  pph      Int
+  sessions Session[]
+}
+
+model Student {
+  id            Int      @id @default(autoincrement())
+  name          String   @db.VarChar(100)
+  lastName      String   @db.VarChar(100)
+  contactNumber String   @db.VarChar(20)
+  bornDate      DateTime @db.Date
+  description   String   @db.VarChar(254)
+}
+
+model Session {
+  id       Int      @id @default(autoincrement())
+  date     DateTime
+  duration Int
+  attended Boolean  @default(false)
+  klass    Klass    @relation(fields: [klassId], references: [id])
+  klassId  Int
+  payment  Payment?
+}
+
+model Payment {
+  id        Int      @id @default(autoincrement())
+  at        DateTime
+  session   Session  @relation(fields: [sessionId], references: [id])
+  sessionId Int      @unique
+}
