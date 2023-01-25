@@ -8,7 +8,7 @@ if(config.env === 'development'){
   app.use(morgan('dev'))
 }
 
-app.use(router)
+app.use('/api/v1', router)
 
 app.listen(config.PORT, () => {
   console.log(`Express app listen on port: ${config.PORT}`)
