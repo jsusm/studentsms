@@ -5,6 +5,7 @@ import router from './routes'
 import * as requestError from './errors'
 
 const app = express()
+app.use(express.json())
 if(config.env === 'development'){
   app.use(morgan('dev'))
 }
