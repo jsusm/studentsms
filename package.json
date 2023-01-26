@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --exit-child --transpile-only ./src/server.ts"
+    "dev": "ts-node-dev --exit-child ./src/server.ts"
   },
   "repository": {
     "type": "git",
