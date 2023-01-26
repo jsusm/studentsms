@@ -1,8 +1,7 @@
 import type { NextFunction, Request, Response } from "express"
 import express from "express";
 import { PrismaClient } from '@prisma/client'
-import { KlassCreateOneSchema } from '../../prisma/generated/schemas/createOneKlass.schema'
-import { KlassUpdateOneSchema } from '../../prisma/generated/schemas/updateOneKlass.schema'
+import { KlassCreateOneSchema, KlassUpdateOneSchema } from '../../prisma/generated/schemas'
 import { z } from "zod";
 
 const router = express.Router()
@@ -33,8 +32,8 @@ router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
 
 router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = KlassCreateOneSchema.parse(req.body)
-    const klass = await prisma.klass.create(data)
+    const data = KlassCreateOneSchema.shape.data.parse(req.body)
+    const klass = await prisma.klass.create({ data })
     res.status(201).json(klass)
   } catch (error) {
     next(error)
@@ -44,7 +43,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
 router.patch('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = findParams.parse(req.params)
-    const data = KlassUpdateOneSchema.parse(req.body)
+    const data = KlassUpdateOneSchema.shape.data.parse(req.body)
     const klass = prisma.klass.update({
       where: { id: id },
       data,
@@ -61,7 +60,6 @@ router.patch('/:id', async (req: Request, res: Response, next: NextFunction) => 
 
 router.delete('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
-
     const { id } = findParams.parse(req.params)
     const klass = await prisma.klass.delete({ where: { id } })
     if (!klass) {
