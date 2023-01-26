@@ -1,9 +1,8 @@
 import type { NextFunction, Request, Response } from "express"
 import express from "express";
 import { PrismaClient } from '@prisma/client'
-import { SessionCreateOneSchema } from '../../prisma/generated/schemas'
-import { SessionUpdateOneSchema } from '../../prisma/generated/schemas/updateOneSession.schema'
 import { z } from "zod";
+import { CreateSessionSchema, UpdateSesssionSchema } from './sessions.schema'
 
 const router = express.Router()
 const prisma = new PrismaClient()
@@ -33,7 +32,7 @@ router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
 
 router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = SessionCreateOneSchema.shape.data.parse(req.body)
+    const data = CreateSessionSchema.parse(req.body)
     const session = await prisma.session.create({ data })
     res.status(201).json(session)
   } catch (error) {
@@ -44,7 +43,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
 router.patch('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = findParams.parse(req.params)
-    const data = SessionUpdateOneSchema.shape.data.parse(req.body)
+    const data = UpdateSesssionSchema.parse(req.body)
     const sessions = prisma.session.update({
       where: { id: id },
       data,
