@@ -1,8 +1,7 @@
 import type { NextFunction, Request, Response } from "express"
 import express from "express";
 import { PrismaClient } from '@prisma/client'
-import { StudentCreateOneSchema } from '../../prisma/generated/schemas/createOneStudent.schema'
-import { StudentUpdateOneSchema } from "../../prisma/generated/schemas";
+import { StudentCreateOneSchema, StudentUpdateOneSchema } from "../../prisma/generated/schemas";
 import { z } from "zod";
 
 const router = express.Router()
@@ -33,8 +32,8 @@ router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
 
 router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = StudentCreateOneSchema.parse(req.body)
-    const student = await prisma.student.create(data)
+    const data = StudentCreateOneSchema.shape.data.parse(req.body)
+    const student = await prisma.student.create({data})
     res.status(201).json(student)
   } catch (error) {
     next(error)
@@ -44,7 +43,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
 router.patch('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = findParams.parse(req.params)
-    const data = StudentUpdateOneSchema.parse(req.body)
+    const data = StudentUpdateOneSchema.shape.data.parse(req.body)
     const student = prisma.student.update({
       where: { id: id },
       data,
