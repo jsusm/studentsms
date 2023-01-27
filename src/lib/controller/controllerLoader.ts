@@ -9,7 +9,7 @@ interface Route {
   methodName: string,
 }
 
-function getControllerRoutes(controller: Object) {
+function getControllerRoutesMethods(controller: Object): Array<Route> {
   const controllerProto = Object.getPrototypeOf(controller)
   const controllerProtoProps = Object.getOwnPropertyNames(controllerProto)
   const routes: Array<Route> = []
@@ -48,7 +48,7 @@ export type ControllerList = {
 export function controlerLoader(controllers: ControllerList) {
   const router = Router()
   for (const path of Object.keys(controllers)) {
-    const routes = getControllerRoutes(controllers[path])
+    const routes = getControllerRoutesMethods(controllers[path])
     router.use('/' + path, loadRoutes(routes))
   }
   return router
