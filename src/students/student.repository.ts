@@ -1,6 +1,7 @@
 import { Student } from './student.model'
 
-export type CreateStudentData = Omit<typeof Student, 'id'>
+export type CreateStudentData = Omit<Student, 'id'>
+
 export type UpdateStudentData = Partial<CreateStudentData>
 
 export interface StudentRepository {

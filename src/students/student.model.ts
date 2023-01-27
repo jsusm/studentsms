@@ -4,6 +4,7 @@ export class Student {
     public name: string,
     public lastName: string,
     public bornDate: Date,
+    public contactNumber: string,
     public description: string,
   ){ }
 }
