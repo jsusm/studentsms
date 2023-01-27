@@ -3,13 +3,7 @@ import morgan from 'morgan'
 import * as config from './config'
 import router from './routes'
 import * as requestError from './errors'
-import { controlerLoader } from './lib/controller/controllerLoader'
-import { KlassController } from './klass/klass.controller'
-import { KlassInteractor } from './klass/klass.interactor'
-import { KlassPrismaRepository } from './klass/klass.prisma'
-import { StudentController } from './students/student.controller'
-import { StudentInteractor } from './students/student.interactor'
-import { StudentPrismaRepository } from './students/student.prisma'
+import { controllerRouter } from './controllers'
 
 const app = express()
 app.use(express.json())
@@ -18,11 +12,7 @@ if(config.env === 'development'){
 }
 
 app.use('/api/v1', router)
-const r = controlerLoader({
-  'classes': new KlassController(new KlassInteractor(new KlassPrismaRepository())),
-  'students': new StudentController(new StudentInteractor(new StudentPrismaRepository())),
-})
-app.use('/api/v2', r)
+app.use('/api/v2', controllerRouter)
 
 // Error handling
 app.use(requestError.requestZodErrorHander)
