@@ -3,12 +3,16 @@ export class Session {
   date: Date
   duration: number
   klassId: number
-  sessionId: number
-  constructor(data: {id: number, date: Date, duration: number, klassId: number, sessionId: number}){
+  studentId: number
+  attended: boolean = false
+  constructor(data: {id: number, date: Date, duration: number, klassId: number, studentId: number, attended?: boolean}){
     this.id = data.id
     this.date = data.date
     this.duration = data.duration
     this.klassId = data.klassId
-    this.sessionId = data.sessionId
+    this.studentId = data.studentId
+    if(data.attended){
+      this.attended = data.attended
+    }
   }
 }
