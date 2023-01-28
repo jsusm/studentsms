@@ -7,6 +7,6 @@ export class StudentController{
   
   @Get('/')
   async find(req: Request, res: Response){
-    res.json(await this.interactor.read())
+    return this.interactor.read()
   }
 }
