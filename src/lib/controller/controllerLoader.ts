@@ -39,10 +39,10 @@ function loadRoutes(routes: Array<Route>): Router {
   const r = Router()
   for (const route of routes) {
     (r as any)[route.method](route.url, (req: Request, res: Response, next: NextFunction) => {
-      try{
+      try {
         const result = (route.controller as any)[route.methodName](req, res, next)
-        if(!(result instanceof Promise)){
-          if(res.headersSent){
+        if (!(result instanceof Promise)) {
+          if (res.headersSent) {
             return
           }
           res.status(route.expectedStatus)
@@ -50,18 +50,20 @@ function loadRoutes(routes: Array<Route>): Router {
           return
         }
         result
-        .then(r => {
-          if(res.headersSent){
-            // The response was send
-            return
-          }
-          res.status(route.expectedStatus)
-          if(r !== undefined) {
-            res.json(r)
-          }
-        })
-        .catch(error => next(error))
-      }catch(error) {
+          .then(r => {
+            if (res.headersSent) {
+              // The response was send
+              return
+            }
+            if (r !== undefined || r !== null) {
+              res.status(route.expectedStatus)
+              res.json(r)
+              return
+            }
+            res.sendStatus(route.expectedStatus)
+          })
+          .catch(error => next(error))
+      } catch (error) {
         next(error)
       }
     })
