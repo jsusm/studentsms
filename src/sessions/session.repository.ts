@@ -1,6 +1,6 @@
 import { Session } from './session.model'
 
-export type CreateSessionData = Omit<Session, 'id'>
+export type CreateSessionData = Omit<Omit<Session, 'id'>, 'attended'>
 export type UpdateSessionData = {date: Date, duration: number}
 
 export interface SessionRepository {
