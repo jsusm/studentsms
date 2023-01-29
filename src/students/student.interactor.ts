@@ -20,4 +20,7 @@ export class StudentInteractor {
   async readOne(criteria: { id: number }){
     return await this.repository.readOne(criteria)
   }
+  async readStudentSessions(criteria: { id: number }){
+    return await this.repository.readStudentsSessions(criteria)
+  }
 }
