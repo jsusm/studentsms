@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { Session } from '../sessions/session.model'
 import { Klass } from "./klass.model";
 import { KlassRepository } from "./klass.repository";
 
@@ -21,5 +22,8 @@ export class KlassPrismaRepository implements KlassRepository {
   }
   readOne(criteria: { id: number; }): Promise<Klass | null> {
     return this.prisma.klass.findUnique({ where: criteria })
+  }
+  readKlassSessions(criteria: { id: number; }): Promise<Session[] | null> {
+    return this.prisma.session.findMany({ where: { klassId: criteria.id }})
   }
 }

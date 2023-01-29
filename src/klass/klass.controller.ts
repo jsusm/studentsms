@@ -22,12 +22,12 @@ export class KlassController {
       res.status(400).json({message: "Id url param must be a number"})
       return
     }
-    const klass = await this.interactor.readOne({id})
-    if(!klass){
+    const result = await this.interactor.readOne({id})
+    if(!result){
       res.sendStatus(404)
       return
     }
-    res.json(klass)
+    res.json(result)
   }
   @Post('/')
   async create(req: Request, res: Response) {
@@ -61,7 +61,8 @@ export class KlassController {
       return
     }
     klass = await this.interactor.update({id: klass.id}, bodyResult.data)
-    res.status(200).json(klass)
+    const sessions = await this.interactor.readKlassSessions({ id })
+    res.status(200).json({klass, sessions})
   }
   @Delete('/:id')
   async delete(req: Request, res: Response) {
