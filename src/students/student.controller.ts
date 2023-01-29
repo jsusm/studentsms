@@ -20,8 +20,12 @@ export class StudentController {
       return
     }
     const { id } = paramsResult.data
-    const student = this.interactor.readOne({ id })
-    const sessions = this.interactor.readStudentSessions({id})
+    const student = await this.interactor.readOne({ id })
+    if(!student){
+      res.sendStatus(404)
+      return
+    }
+    const sessions = await this.interactor.readStudentSessions({id})
     return { student, sessions }
   }
   @Post('/')
