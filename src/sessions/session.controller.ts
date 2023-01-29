@@ -24,6 +24,7 @@ export class SessionController {
   @Post('/')
   @Status(201)
   async create(req: Request, res: Response) {
+    console.log(req.body)
     const bodyResult = CreateSessionSchema.safeParse(req.body)
     if(!bodyResult.success){
       res.status(400).json({message: fromZodError(bodyResult.error).message})
