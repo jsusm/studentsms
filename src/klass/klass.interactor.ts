@@ -22,4 +22,7 @@ export class KlassInteractor {
   async readOne(criteria: {id: number}) {
     return await this.repository.readOne(criteria)
   }
+  async readKlassSessions(criteria: {id: number}){
+    return await this.repository.readKlassSessions(criteria)
+  }
 }
