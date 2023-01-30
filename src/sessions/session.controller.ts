@@ -19,7 +19,7 @@ export class SessionController {
       return
     }
     const { id } = paramsResult.data
-    return this.interactor.readOne({id})
+    return this.interactor.readOneAndRelated({id})
   }
   @Post('/')
   @Status(201)
@@ -45,12 +45,12 @@ export class SessionController {
       return
     }
     const { id } = paramsResult.data
-    let session = this.interactor.readOne({ id })
+    let session = await this.interactor.readOne({ id })
     if(!session){
       res.status(404)
       return
     }
-    session = this.interactor.update({id}, bodyResult.data)
+    session = await this.interactor.update({id}, bodyResult.data)
     return session
   }
   @Delete('/')
