@@ -4,8 +4,12 @@ export const InteractorErrorTypes = [
   "unauthorized",
 ] as const
 
-export interface InteractorError extends Error {
+export class InteractorError extends Error {
   type: typeof InteractorErrorTypes[number]
+  constructor(message: string, type: typeof InteractorErrorTypes[number]){
+    super(message)
+    this.type = type
+  }
 }
 
 export interface InteractionSuccess<Output> {
@@ -18,4 +22,4 @@ export interface InteractionError {
   error: InteractorError
 }
 
-export type InteractorResult<Output> = InteractionSuccess<Output> | InteractorError 
+export type InteractorResult<Output> = InteractionSuccess<Output> | InteractionError
