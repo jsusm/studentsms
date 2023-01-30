@@ -4,6 +4,12 @@ export const InteractorErrorTypes = [
   "unauthorized",
 ] as const
 
+export const InteractorErrorTypesToHttpStatus: { [Key in typeof InteractorErrorTypes[number]]: number} = {
+  notFound: 404,
+  notAllowed: 405,
+  unauthorized: 401,
+}
+
 export class InteractorError extends Error {
   type: typeof InteractorErrorTypes[number]
   constructor(message: string, type: typeof InteractorErrorTypes[number]){
