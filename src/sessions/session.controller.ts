@@ -1,13 +1,13 @@
-import { Request, Response } from 'express'
-import { StudentInteractor } from './student.interactor'
-import { Delete, Get, Patch, Post } from '../lib/controller/methodDecorators'
-import { CreateStudentSchema, ResourceIdentifier, UpdateStudentSchema } from './student.schema'
+import type { Request, Response } from 'express'
 import { fromZodError } from 'zod-validation-error'
+import { Delete, Get, Patch, Post } from '../lib/controller/methodDecorators'
 import { Status } from '../lib/controller/statusDecorator'
+import { InteractorErrorTypesToHttpStatus } from '../lib/interactor/interactorResult'
+import { SessionInteractor } from './session.interactor'
+import { CreateSessionSchema, ResourceIdentifier } from './sessions.schema'
 
-export class StudentController {
-  constructor(private interactor: StudentInteractor) { }
-
+export class SessionController {
+  constructor(public interactor: SessionInteractor) { }
   @Get('/')
   async find(req: Request, res: Response) {
     return this.interactor.read()
@@ -20,24 +20,18 @@ export class StudentController {
       return
     }
     const { id } = paramsResult.data
-    const student = await this.interactor.readOne({ id })
-    if(!student){
-      res.sendStatus(404)
-      return
-    }
-    const sessions = await this.interactor.readStudentSessions({id})
-    return { student, sessions }
+    return this.interactor.readOneAndRelated({ id })
   }
   @Post('/')
   @Status(201)
   async create(req: Request, res: Response) {
     console.log(req.body)
-    const bodyResults = CreateStudentSchema.safeParse(req.body)
-    if (!bodyResults.success) {
-      res.status(400).json({ message: fromZodError(bodyResults.error).message })
+    const bodyResult = CreateSessionSchema.safeParse(req.body)
+    if (!bodyResult.success) {
+      res.status(400).json({ message: fromZodError(bodyResult.error).message })
       return
     }
-    return this.interactor.create(bodyResults.data)
+    return this.interactor.create(bodyResult.data)
   }
   @Patch('/:id')
   async update(req: Request, res: Response) {
@@ -46,21 +40,26 @@ export class StudentController {
       res.status(400).json({ message: fromZodError(paramsResult.error).message })
       return
     }
-    const bodyResults = UpdateStudentSchema.safeParse(req.body)
-    if (!bodyResults.success) {
-      res.status(400).json({ message: fromZodError(bodyResults.error).message })
+    const bodyResult = CreateSessionSchema.safeParse(req.body)
+    if (!bodyResult.success) {
+      res.status(400).json({ message: fromZodError(bodyResult.error).message })
       return
     }
     const { id } = paramsResult.data
-    let student = await this.interactor.readOne({ id })
-    if(!student){
-      res.sendStatus(404)
+    let session = await this.interactor.readOne({ id })
+    if (!session) {
+      res.status(404)
       return
     }
-    student = await this.interactor.update({id}, bodyResults.data)
-    return student
+    const result = await this.interactor.update({ id }, bodyResult.data)
+    if (!result.success) {
+      res
+        .status(InteractorErrorTypesToHttpStatus[result.error.type])
+        .send(result.error.message)
+    }
+    return session
   }
-  @Delete('/:id')
+  @Delete('/')
   @Status(200)
   async delete(req: Request, res: Response) {
     const paramsResult = ResourceIdentifier.safeParse(req.params)
@@ -69,6 +68,6 @@ export class StudentController {
       return
     }
     const { id } = paramsResult.data
-    await this.interactor.delete({ id })
+    this.interactor.delete({ id })
   }
 }

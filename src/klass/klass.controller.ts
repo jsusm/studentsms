@@ -27,7 +27,8 @@ export class KlassController {
       res.sendStatus(404)
       return
     }
-    res.json(klass)
+    const sessions = await this.interactor.readKlassSessions({ id })
+    res.status(200).json({klass, sessions})
   }
   @Post('/')
   async create(req: Request, res: Response) {
@@ -61,7 +62,7 @@ export class KlassController {
       return
     }
     klass = await this.interactor.update({id: klass.id}, bodyResult.data)
-    res.status(200).json(klass)
+    return klass
   }
   @Delete('/:id')
   async delete(req: Request, res: Response) {

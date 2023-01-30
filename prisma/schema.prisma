@@ -18,22 +18,25 @@ model Klass {
 }
 
 model Student {
-  id            Int      @id @default(autoincrement())
-  name          String   @db.VarChar(100)
-  lastName      String   @db.VarChar(100)
-  contactNumber String   @db.VarChar(20)
-  bornDate      DateTime @db.Date
-  description   String   @db.VarChar(254)
+  id            Int       @id @default(autoincrement())
+  name          String    @db.VarChar(100)
+  lastName      String    @db.VarChar(100)
+  contactNumber String    @db.VarChar(20)
+  bornDate      DateTime  @db.Date
+  description   String    @db.VarChar(254)
+  sessions      Session[]
 }
 
 model Session {
-  id       Int      @id @default(autoincrement())
-  date     DateTime
-  duration Int
-  attended Boolean  @default(false)
-  klass    Klass    @relation(fields: [klassId], references: [id])
-  klassId  Int
-  payment  Payment?
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  duration  Int
+  attended  Boolean  @default(false)
+  klass     Klass    @relation(fields: [klassId], references: [id])
+  klassId   Int
+  student   Student  @relation(fields: [studentId], references: [id])
+  studentId Int
+  payment   Payment?
 }
 
 model Payment {
