@@ -11,6 +11,9 @@ export class SessionInteractor {
   async readOne(criteria: {id: number}){
     return await this.repository.readOne(criteria)
   }
+  async readOneAndRelated(criteria: {id: number}){
+    return await this.repository.readOneAndRelated(criteria)
+  }
   async create(data: CreateSessionData){
     const session = await this.repository.create(data)
     return session
