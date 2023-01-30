@@ -2,6 +2,7 @@ import type { Request, Response } from 'express'
 import { fromZodError } from 'zod-validation-error'
 import { Delete, Get, Patch, Post } from '../lib/controller/methodDecorators'
 import { Status } from '../lib/controller/statusDecorator'
+import { InteractorErrorTypesToHttpStatus } from '../lib/interactor/interactorResult'
 import { SessionInteractor } from './session.interactor'
 import { CreateSessionSchema, ResourceIdentifier } from './sessions.schema'
 
@@ -52,18 +53,9 @@ export class SessionController {
     }
     const result = await this.interactor.update({ id }, bodyResult.data)
     if (!result.success) {
-      let status = 0
-      switch (result.error.type) {
-        case "notAllowed":
-          status = 405
-          break;
-        case "notFound":
-          status = 404
-          break
-        default:
-          status = 500
-      }
-      res.status(status).send(result.error.message)
+      res
+        .status(InteractorErrorTypesToHttpStatus[result.error.type])
+        .send(result.error.message)
     }
     return session
   }
