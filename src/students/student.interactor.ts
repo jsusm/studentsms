@@ -21,6 +21,6 @@ export class StudentInteractor {
     return await this.repository.readOne(criteria)
   }
   async readStudentSessions(criteria: { id: number }){
-    return await this.repository.readStudentsSessions(criteria)
+    return await this.repository.readStudentSessions(criteria)
   }
 }
