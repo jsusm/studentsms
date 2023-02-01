@@ -1,15 +1,12 @@
 import { Request, Response } from 'express'
 import { Delete, Get, Patch, Post } from '../lib/controller/methodDecorators'
-import { KlassInteractor } from './klass.interactor';
 import { KlassRepository } from './klass.repository'
 import { CreateKlassSchema, UpdateKlassSchema } from './klass.schema';
 import { ResourceIdentifier } from './klass.schema'
 
 export class KlassController {
-  interactor: KlassInteractor
   repository: KlassRepository
-  constructor(interactor: KlassInteractor, repository: KlassRepository) {
-    this.interactor = interactor
+  constructor(repository: KlassRepository) {
     this.repository = repository
   }
   @Get('/')
@@ -48,6 +45,11 @@ export class KlassController {
   @Delete('/:id')
   async delete(req: Request, res: Response) {
     const { id } = ResourceIdentifier.parse(req.params)
+    let klass = await this.repository.readOne({ id })
+    if (!klass) {
+      res.sendStatus(404)
+      return
+    }
     await this.repository.delete({ id })
     res.status(200)
   }

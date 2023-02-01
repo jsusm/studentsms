@@ -1,6 +1,5 @@
 import { controlerLoader } from './lib/controller/controllerLoader'
 import { KlassController } from './klass/klass.controller'
-import { KlassInteractor } from './klass/klass.interactor'
 import { KlassPrismaRepository } from './klass/klass.prisma'
 import { StudentController } from './students/student.controller'
 import { StudentInteractor } from './students/student.interactor'
@@ -10,7 +9,7 @@ import { SessionPrismaRepository } from './sessions/session.prisma'
 import { SessionInteractor } from './sessions/session.interactor'
 
 const controllers = {
-  'classes': new KlassController(new KlassInteractor(new KlassPrismaRepository()), new KlassPrismaRepository()),
+  'classes': new KlassController(new KlassPrismaRepository()),
   'students': new StudentController(new StudentInteractor(new StudentPrismaRepository())),
   'sessions': new SessionController(new SessionInteractor(new SessionPrismaRepository()))
 }

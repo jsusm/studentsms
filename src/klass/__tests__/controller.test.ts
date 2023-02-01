@@ -2,12 +2,11 @@ import express from 'express'
 import request from 'supertest';
 import { controlerLoader } from '../../lib/controller/controllerLoader';
 import { KlassController } from "../klass.controller";
-import { KlassInteractor } from '../klass.interactor';
 import { KlassMockRepository, test_klasses } from "../mock.repository";
 
 function setUpController(repo: KlassMockRepository) {
   const app = express()
-  app.use('/', controlerLoader({ 'classes': new KlassController(new KlassInteractor(repo)) }))
+  app.use('/', controlerLoader({ 'classes': new KlassController(repo) }))
   return app
 }
 
