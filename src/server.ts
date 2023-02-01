@@ -1,7 +1,6 @@
 import express from 'express'
 import morgan from 'morgan'
 import * as config from './config'
-import router from './routes'
 import * as requestError from './errors'
 import { controllerRouter } from './controllers'
 
@@ -11,7 +10,6 @@ if(config.env === 'development'){
   app.use(morgan('dev'))
 }
 
-app.use('/api/v1', router)
 app.use('/api/v2', controllerRouter)
 
 // Error handling
