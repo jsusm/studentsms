@@ -3,7 +3,7 @@ import { Delete, Get, Patch, Post } from '../lib/controller/methodDecorators'
 import { KlassInteractor } from './klass.interactor';
 import { KlassRepository } from './klass.repository'
 import { CreateKlassSchema, UpdateKlassSchema } from './klass.schema';
-import { fromZodError } from 'zod-validation-error';
+import { ResourceIdentifier } from './klass.schema'
 
 export class KlassController {
   interactor: KlassInteractor
@@ -18,64 +18,36 @@ export class KlassController {
   }
   @Get('/:id')
   async findOne(req: Request, res: Response) {
-    let id: number
-    try{
-      id = parseInt(req.params.id)
-    }catch(error){
-      res.status(400).json({message: "Id url param must be a number"})
-      return
-    }
-    const klass = await this.repository.readOne({id})
-    if(!klass){
+    const { id } = ResourceIdentifier.parse(req.params)
+    const klass = await this.repository.readOne({ id })
+    if (!klass) {
       res.sendStatus(404)
       return
     }
     const sessions = await this.repository.readKlassSessions({ id })
-    res.status(200).json({klass, sessions})
+    res.status(200).json({ klass, sessions })
   }
   @Post('/')
   async create(req: Request, res: Response) {
-    const bodyResult = CreateKlassSchema.safeParse(req.body)
-    if(!bodyResult.success){
-      const validationError = fromZodError(bodyResult.error)
-      res.status(400).json({message: validationError.message})
-      return
-    }
-    const klass = await this.repository.create(bodyResult.data)
+    const data = CreateKlassSchema.parse(req.body)
+    const klass = await this.repository.create(data)
     res.status(201).json(klass)
   }
   @Patch('/:id')
   async update(req: Request, res: Response) {
-    let id: number
-    try{
-      id = parseInt(req.params.id)
-    }catch(error){
-      res.status(400).json({message: "Id url param must be a number"})
-      return
-    }
-    const bodyResult = UpdateKlassSchema.safeParse(req.body)
-    if(!bodyResult.success){
-      const validationError = fromZodError(bodyResult.error)
-      res.status(400).json({message: validationError.message})
-      return
-    }
+    const { id } = ResourceIdentifier.parse(req.params)
+    const data = UpdateKlassSchema.parse(req.body)
     let klass = await this.repository.readOne({ id })
-    if(!klass){
+    if (!klass) {
       res.sendStatus(404)
       return
     }
-    klass = await this.repository.update({id: klass.id}, bodyResult.data)
+    klass = await this.repository.update({ id: klass.id }, data)
     return klass
   }
   @Delete('/:id')
   async delete(req: Request, res: Response) {
-    let id: number
-    try{
-      id = parseInt(req.params.id)
-    }catch(error){
-      res.status(400).json({message: "Id url param must be a number"})
-      return
-    }
+    const { id } = ResourceIdentifier.parse(req.params)
     await this.repository.delete({ id })
     res.status(200)
   }
