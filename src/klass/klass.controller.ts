@@ -5,10 +5,8 @@ import { CreateKlassSchema, UpdateKlassSchema } from './klass.schema';
 import { ResourceIdentifier } from './klass.schema'
 
 export class KlassController {
-  repository: KlassRepository
-  constructor(repository: KlassRepository) {
-    this.repository = repository
-  }
+  constructor(public repository: KlassRepository) { }
+
   @Get('/')
   async findAll(req: Request, res: Response) {
     return this.repository.read()

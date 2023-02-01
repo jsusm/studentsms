@@ -6,6 +6,7 @@ import { CreateSessionSchema, ResourceIdentifier } from './sessions.schema'
 
 export class SessionController {
   constructor(public repository: SessionRepository) { }
+
   @Get('/')
   async find(req: Request, res: Response) {
     return await this.repository.read()
