@@ -6,12 +6,11 @@ import { StudentInteractor } from './students/student.interactor'
 import { StudentPrismaRepository } from './students/student.prisma'
 import { SessionController } from './sessions/session.controller'
 import { SessionPrismaRepository } from './sessions/session.prisma'
-import { SessionInteractor } from './sessions/session.interactor'
 
 const controllers = {
   'classes': new KlassController(new KlassPrismaRepository()),
   'students': new StudentController(new StudentInteractor(new StudentPrismaRepository())),
-  'sessions': new SessionController(new SessionInteractor(new SessionPrismaRepository()))
+  'sessions': new SessionController(new SessionPrismaRepository()),
 }
 
 export const controllerRouter = controlerLoader(controllers)
