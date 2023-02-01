@@ -10,7 +10,7 @@ import { SessionPrismaRepository } from './sessions/session.prisma'
 import { SessionInteractor } from './sessions/session.interactor'
 
 const controllers = {
-  'classes': new KlassController(new KlassInteractor(new KlassPrismaRepository())),
+  'classes': new KlassController(new KlassInteractor(new KlassPrismaRepository()), new KlassPrismaRepository()),
   'students': new StudentController(new StudentInteractor(new StudentPrismaRepository())),
   'sessions': new SessionController(new SessionInteractor(new SessionPrismaRepository()))
 }
