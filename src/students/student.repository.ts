@@ -10,6 +10,6 @@ export interface StudentRepository {
   update(criteria: { id: number }, data: UpdateStudentData): Promise<Student>
   delete(criteria: { id: number }): Promise<Student>
   readOne(criteria: { id: number }): Promise<Student | null>
-  readStudentSessions(criteria: { id: number }): Promise<Session[] | null>
+  readOneAndRelated(criteria: { id: number }): Promise<{student: Student, sessions: Session[]} | null>
   read(): Promise<Array<Student>>
 }

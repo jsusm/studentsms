@@ -23,7 +23,15 @@ export class StudentPrismaRepository implements StudentRepository {
   readOne(criteria: { id: number; }): Promise<Student | null> {
     return this.prisma.student.findUnique({ where: criteria })
   }
-  readStudentSessions(criteria: { id: number; }): Promise<Session[] | null> {
-    return this.prisma.session.findMany({ where: { studentId: criteria.id } })
+  async readOneAndRelated(criteria: { id: number; }): Promise<{ student: Student; sessions: Session[]; } | null> {
+    const result = await this.prisma.student.findUnique({
+      where: criteria,
+      include: {
+        sessions: true,
+      }
+    })
+    if(!result) return null
+    const { sessions, ...student } = result
+    return { student, sessions }
   }
 }

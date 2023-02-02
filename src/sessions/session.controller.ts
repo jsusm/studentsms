@@ -14,7 +14,7 @@ export class SessionController {
   @Get('/:id')
   async findOne(req: Request, res: Response) {
     const { id } = ResourceIdentifier.parse(req.params)
-    const session = this.repository.readOneAndRelated({ id })
+    const session = await this.repository.readOneAndRelated({ id })
     if (!session) {
       res.sendStatus(404)
       return

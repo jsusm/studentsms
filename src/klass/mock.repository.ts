@@ -38,8 +38,10 @@ export class KlassMockRepository implements KlassRepository {
   async create(data: { title: string; pph: number; }): Promise<Klass> {
     return { ...data, id: 0 }
   }
-  async readKlassSessions(criteria: { id: number; }): Promise<Session[] | null> {
-    return []
+  async readOneAndRelated(criteria: { id: number; }): Promise<{ klass: Klass; sessions: Session[]; } | null> {
+    const klass = await this.readOne(criteria)
+    if(!klass) return null
+    return { klass, sessions: []}
   }
   async delete(criteria: { id: number; }): Promise<Klass> {
     const klass = await this.readOne(criteria)

@@ -23,7 +23,13 @@ export class KlassPrismaRepository implements KlassRepository {
   readOne(criteria: { id: number; }): Promise<Klass | null> {
     return this.prisma.klass.findUnique({ where: criteria })
   }
-  readKlassSessions(criteria: { id: number; }): Promise<Session[] | null> {
-    return this.prisma.session.findMany({ where: { klassId: criteria.id }})
+  async readOneAndRelated(criteria: { id: number; }): Promise<{ klass: Klass; sessions: Session[] } | null> {
+    const result = await this.prisma.klass.findUnique({
+      where: criteria, 
+      include: { sessions: true }
+    })
+    if(!result) return null
+    const { sessions, ...klass } = result
+    return { sessions, klass }
   }
 }

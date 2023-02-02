@@ -14,13 +14,12 @@ export class KlassController {
   @Get('/:id')
   async findOne(req: Request, res: Response) {
     const { id } = ResourceIdentifier.parse(req.params)
-    const klass = await this.repository.readOne({ id })
-    if (!klass) {
+    const result = await this.repository.readOneAndRelated({ id })
+    if (!result) {
       res.sendStatus(404)
       return
     }
-    const sessions = await this.repository.readKlassSessions({ id })
-    res.status(200).json({ klass, sessions })
+    return result
   }
   @Post('/')
   async create(req: Request, res: Response) {

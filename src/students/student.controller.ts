@@ -14,13 +14,12 @@ export class StudentController {
   @Get('/:id')
   async findOne(req: Request, res: Response) {
     const { id } = ResourceIdentifier.parse(req.params)
-    const student = await this.repository.readOne({ id })
-    if(!student){
+    const result = await this.repository.readOneAndRelated({ id })
+    if(!result){
       res.sendStatus(404)
       return
     }
-    const sessions = await this.repository.readStudentSessions({id})
-    return { student, sessions }
+    return result
   }
   @Post('/')
   @Status(201)
