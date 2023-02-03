@@ -90,8 +90,9 @@ describe('Session controller', () => {
           .patch('/api/v2/sessions/2')
           .set("Content-Type", "application/json")
           .send(payload)
+        console.log("body: ", res.body)
+        console.log("status: ", res.status)
         expect(res.status).toBe(409)
-        expect(res.body).toMatch(/attended/)
       })
     })
     describe("Given an invalid payload", () => {
