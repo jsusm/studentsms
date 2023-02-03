@@ -2,7 +2,7 @@ import type { Request, Response } from 'express'
 import { Delete, Get, Patch, Post } from '../lib/controller/methodDecorators'
 import { Status } from '../lib/controller/statusDecorator'
 import { SessionRepository } from './session.repository'
-import { CreateSessionSchema, ResourceIdentifier } from './sessions.schema'
+import { CreateSessionSchema, ResourceIdentifier, UpdateSesssionSchema } from './sessions.schema'
 
 export class SessionController {
   constructor(public repository: SessionRepository) { }
@@ -30,7 +30,7 @@ export class SessionController {
   @Patch('/:id')
   async update(req: Request, res: Response) {
     const { id } = ResourceIdentifier.parse(req.params)
-    const data = CreateSessionSchema.parse(req.body)
+    const data = UpdateSesssionSchema.parse(req.body)
     let session = await this.repository.readOne({ id })
     if (!session) {
       res.sendStatus(404)

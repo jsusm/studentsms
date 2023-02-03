@@ -14,4 +14,5 @@ export const CreateSessionSchema = z.object({
 export const UpdateSesssionSchema = z.object({
   date: z.coerce.date().optional(),
   duration: z.number().int().gt(1).optional(),
+  attended: z.boolean().optional()
 }).strict()

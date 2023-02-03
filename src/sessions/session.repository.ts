@@ -3,7 +3,7 @@ import { Student } from '../students/student.model'
 import { Session } from './session.model'
 
 export type CreateSessionData = Omit<Omit<Session, 'id'>, 'attended'>
-export type UpdateSessionData = {date: Date, duration: number}
+export type UpdateSessionData = {date?: Date, duration?: number, attended?: boolean}
 
 export interface SessionRepository {
   create(data: CreateSessionData): Promise<Session>
