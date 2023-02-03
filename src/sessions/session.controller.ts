@@ -1,73 +1,52 @@
 import type { Request, Response } from 'express'
-import { fromZodError } from 'zod-validation-error'
 import { Delete, Get, Patch, Post } from '../lib/controller/methodDecorators'
 import { Status } from '../lib/controller/statusDecorator'
-import { InteractorErrorTypesToHttpStatus } from '../lib/interactor/interactorResult'
-import { SessionInteractor } from './session.interactor'
+import { SessionRepository } from './session.repository'
 import { CreateSessionSchema, ResourceIdentifier } from './sessions.schema'
 
 export class SessionController {
-  constructor(public interactor: SessionInteractor) { }
+  constructor(public repository: SessionRepository) { }
+
   @Get('/')
   async find(req: Request, res: Response) {
-    return this.interactor.read()
+    return await this.repository.read()
   }
   @Get('/:id')
   async findOne(req: Request, res: Response) {
-    const paramsResult = ResourceIdentifier.safeParse(req.params)
-    if (!paramsResult.success) {
-      res.status(400).json({ message: fromZodError(paramsResult.error).message })
+    const { id } = ResourceIdentifier.parse(req.params)
+    const session = await this.repository.readOneAndRelated({ id })
+    if (!session) {
+      res.sendStatus(404)
       return
     }
-    const { id } = paramsResult.data
-    return this.interactor.readOneAndRelated({ id })
+    return session
   }
   @Post('/')
   @Status(201)
   async create(req: Request, res: Response) {
-    console.log(req.body)
-    const bodyResult = CreateSessionSchema.safeParse(req.body)
-    if (!bodyResult.success) {
-      res.status(400).json({ message: fromZodError(bodyResult.error).message })
-      return
-    }
-    return this.interactor.create(bodyResult.data)
+    const data = CreateSessionSchema.parse(req.body)
+    return this.repository.create(data)
   }
   @Patch('/:id')
   async update(req: Request, res: Response) {
-    const paramsResult = ResourceIdentifier.safeParse(req.params)
-    if (!paramsResult.success) {
-      res.status(400).json({ message: fromZodError(paramsResult.error).message })
-      return
-    }
-    const bodyResult = CreateSessionSchema.safeParse(req.body)
-    if (!bodyResult.success) {
-      res.status(400).json({ message: fromZodError(bodyResult.error).message })
-      return
-    }
-    const { id } = paramsResult.data
-    let session = await this.interactor.readOne({ id })
+    const { id } = ResourceIdentifier.parse(req.params)
+    const data = CreateSessionSchema.parse(req.body)
+    let session = await this.repository.readOne({ id })
     if (!session) {
-      res.status(404)
+      res.sendStatus(404)
       return
     }
-    const result = await this.interactor.update({ id }, bodyResult.data)
-    if (!result.success) {
-      res
-        .status(InteractorErrorTypesToHttpStatus[result.error.type])
-        .send(result.error.message)
+    if (session.attended) {
+      res.status(405).send('Cannot update an attended session.')
     }
+    session = await this.repository.update({ id }, data)
     return session
   }
   @Delete('/')
   @Status(200)
   async delete(req: Request, res: Response) {
-    const paramsResult = ResourceIdentifier.safeParse(req.params)
-    if (!paramsResult.success) {
-      res.status(400).json({ message: fromZodError(paramsResult.error).message })
-      return
-    }
-    const { id } = paramsResult.data
-    this.interactor.delete({ id })
+    const { id } = ResourceIdentifier.parse(req.params)
+    await this.repository.delete({ id })
+    res.sendStatus(200)
   }
 }

@@ -4,7 +4,6 @@ import { fromZodError } from 'zod-validation-error'
 import * as config from './config'
 
 export function requestZodErrorHander(error: Error, req: Request, res: Response, next: NextFunction){
-  console.error(error)
   if(error instanceof ZodError) {
     res.status(400).json(fromZodError(error).message)
     return

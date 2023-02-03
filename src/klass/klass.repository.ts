@@ -6,6 +6,6 @@ export interface KlassRepository {
   update(criteria: { id: number }, data: { title?: string, pph?: number }): Promise<Klass>
   delete(criteria: { id: number }): Promise<Klass>
   readOne(criteria: { id: number }): Promise<Klass | null>
-  readKlassSessions(criteria: { id: number }): Promise<Session[] | null>
+  readOneAndRelated(criteria: { id: number }): Promise<{klass: Klass, sessions: Array<Session>} | null>
   read(): Promise<Array<Klass>>
 }
