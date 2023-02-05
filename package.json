@@ -4,7 +4,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --exit-child ./src/server.ts",
-    "test:unit": "jest --testPathPattern=src/"
+    "test:unit": "jest --testPathPattern=src/",
+    "migrate": "prisma migrate deploy",
+    "build": "tsc",
+    "start": "npm run build && npm migrate && node ./build/server.js"
   },
   "repository": {
     "type": "git",
