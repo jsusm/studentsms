@@ -1,6 +1,6 @@
 import { Payment } from './payment.model'
 
-type CreatePaymentData = Omit<Payment, 'id'>
+export type CreatePaymentData = Omit<Payment, 'id'>
 
 export interface PaymentRepository {
   create(data: CreatePaymentData): Promise<Payment>
