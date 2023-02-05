@@ -48,6 +48,7 @@ describe('PaymentController', () => {
           .post("/api/v2/payments")
           .set("Content-Type", "application/json")
           .send(payload)
+        console.log(res.body)
         expect(res.status).toBe(201)
         expect(res.body).toBeDefined()
       })
