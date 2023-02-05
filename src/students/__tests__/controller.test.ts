@@ -1,10 +1,8 @@
 import express from "express";
 import request from "supertest";
 import { setUpApp } from "../../app";
-import { UpdateSessionData } from "../../sessions/session.repository";
-import { studentMockData, StudentMockRepository } from "../mock.repository";
+import { StudentMockRepository } from "../mock.repository";
 import { StudentController } from "../student.controller";
-import { Student } from "../student.model";
 import { CreateStudentData, UpdateStudentData } from "../student.repository";
 
 let app: express.Application

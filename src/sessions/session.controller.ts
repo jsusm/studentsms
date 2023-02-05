@@ -1,8 +1,7 @@
 import type { Request, Response } from 'express'
-import { Delete, Get, Patch, Post } from '../lib/controller/methodDecorators'
-import { Status } from '../lib/controller/statusDecorator'
+import { Status, Delete, Get, Patch, Post } from '../lib/controller'
 import { SessionRepository } from './session.repository'
-import { CreateSessionSchema, ResourceIdentifier } from './sessions.schema'
+import { CreateSessionSchema, ResourceIdentifier, UpdateSesssionSchema } from './sessions.schema'
 
 export class SessionController {
   constructor(public repository: SessionRepository) { }
@@ -30,22 +29,28 @@ export class SessionController {
   @Patch('/:id')
   async update(req: Request, res: Response) {
     const { id } = ResourceIdentifier.parse(req.params)
-    const data = CreateSessionSchema.parse(req.body)
+    const data = UpdateSesssionSchema.parse(req.body)
     let session = await this.repository.readOne({ id })
     if (!session) {
       res.sendStatus(404)
       return
     }
     if (session.attended) {
-      res.status(405).send('Cannot update an attended session.')
+      res.status(409).send('Conflict: Cannot update an attended session.')
+      return
     }
     session = await this.repository.update({ id }, data)
     return session
   }
-  @Delete('/')
+  @Delete('/:id')
   @Status(200)
   async delete(req: Request, res: Response) {
     const { id } = ResourceIdentifier.parse(req.params)
+    const session = await this.repository.readOne({ id })
+    if(!session){
+      res.sendStatus(404)
+      return 
+    }
     await this.repository.delete({ id })
     res.sendStatus(200)
   }

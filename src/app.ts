@@ -2,7 +2,7 @@ import express from "express"
 import morgan from "morgan"
 import * as config from './config'
 import * as requestError from './errors'
-import { controlerLoader } from './lib/controller/controllerLoader'
+import { controllerLoader } from './lib/controller'
 
 export function setUpApp(controllers: {[key: string]: any}) {
   const app = express()
@@ -11,7 +11,7 @@ export function setUpApp(controllers: {[key: string]: any}) {
     app.use(morgan('dev'))
   }
 
-  app.use('/api/v2', controlerLoader(controllers))
+  app.use('/api/v2', controllerLoader(controllers))
 
   // Error handling
   app.use(requestError.requestZodErrorHander)

@@ -74,7 +74,7 @@ function loadRoutes(routes: Array<Route>): Router {
 export type ControllerList = {
   [path: string]: Object
 }
-export function controlerLoader(controllers: ControllerList) {
+export function controllerLoader(controllers: ControllerList) {
   const router = Router()
   for (const path of Object.keys(controllers)) {
     const routes = getControllerRoutesMethods(controllers[path])
