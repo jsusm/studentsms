@@ -1,1 +1,1 @@
-export * from './interactorResult.ts'
+export * from './interactorResult'
