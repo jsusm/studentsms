@@ -1,8 +1,7 @@
-import { Delete, Get, Post } from "../lib/controller/methodDecorators";
+import { Status, Delete, Get, Post } from "../lib/controller";
 import { PaymentRepository } from "./payment.repository";
 import { CreatePaymentSchema, ResourceIdentifier } from './payment.schema'
 import { Request, Response } from 'express'
-import { Status } from "../lib/controller/statusDecorator";
 
 export class PaymentController {
   constructor(private repository: PaymentRepository){}

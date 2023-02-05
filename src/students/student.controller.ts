@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
-import { Delete, Get, Patch, Post } from '../lib/controller/methodDecorators'
+import { Status, Delete, Get, Patch, Post } from '../lib/controller'
 import { CreateStudentSchema, ResourceIdentifier, UpdateStudentSchema } from './student.schema'
-import { Status } from '../lib/controller/statusDecorator'
 import { StudentRepository } from './student.repository'
 
 export class StudentController {

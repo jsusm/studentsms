@@ -1,6 +1,5 @@
 import type { Request, Response } from 'express'
-import { Delete, Get, Patch, Post } from '../lib/controller/methodDecorators'
-import { Status } from '../lib/controller/statusDecorator'
+import { Status, Delete, Get, Patch, Post } from '../lib/controller'
 import { SessionRepository } from './session.repository'
 import { CreateSessionSchema, ResourceIdentifier, UpdateSesssionSchema } from './sessions.schema'
 

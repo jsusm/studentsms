@@ -2,7 +2,7 @@ import express from "express"
 import morgan from "morgan"
 import * as config from './config'
 import * as requestError from './errors'
-import { controllerLoader } from './lib/controller/controllerLoader'
+import { controllerLoader } from './lib/controller'
 
 export function setUpApp(controllers: {[key: string]: any}) {
   const app = express()

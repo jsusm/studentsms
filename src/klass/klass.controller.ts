@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { Delete, Get, Patch, Post } from '../lib/controller/methodDecorators'
+import { Delete, Get, Patch, Post } from '../lib/controller'
 import { KlassRepository } from './klass.repository'
 import { CreateKlassSchema, UpdateKlassSchema } from './klass.schema';
 import { ResourceIdentifier } from './klass.schema'
